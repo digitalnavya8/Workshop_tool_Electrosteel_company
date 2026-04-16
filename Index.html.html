@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Clarity Workshop — FinnFluent</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D0D0D;
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --cream: #FAF7F2;
+    --paper: #F2EDE4;
+    --muted: #7A7060;
+    --accent: #1B3A2D;
+    --red: #B84040;
+    --blue: #2D4A7A;
+    --purple: #5A3D7A;
+    --teal: #1A5F5A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--accent);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .brand { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+  .brand span { color: #fff; font-size: 13px; font-weight: 400; display: block; font-family: 'DM Sans', sans-serif; letter-spacing: 1px; }
+  .progress-bar-wrap { flex: 1; max-width: 300px; margin: 0 24px; }
+  .progress-label { color: rgba(255,255,255,0.6); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+  .progress-bar { background: rgba(255,255,255,0.15); border-radius: 20px; height: 6px; overflow: hidden; }
+  .progress-fill { background: var(--gold); height: 100%; border-radius: 20px; transition: width 0.5s ease; width: 0%; }
+  .step-indicator { color: var(--gold); font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+  /* SCREENS */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HERO */
+  .hero {
+    background: var(--accent);
+    padding: 60px 32px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(201,168,76,0.08) 0%, transparent 50%);
+  }
+  .hero-tag { color: var(--gold); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; position: relative; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 6vw, 56px); color: #fff; line-height: 1.15; margin-bottom: 20px; position: relative; }
+  .hero-title em { color: var(--gold); font-style: normal; }
+  .hero-subtitle { color: rgba(255,255,255,0.7); font-size: 17px; max-width: 520px; margin: 0 auto 36px; line-height: 1.7; position: relative; }
+  .hero-books { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; position: relative; }
+  .book-chip {
+    background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  }
+  .btn-start {
+    background: var(--gold);
+    color: var(--ink);
+    border: none; padding: 16px 48px;
+    border-radius: 4px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s; position: relative;
+    box-shadow: 0 4px 24px rgba(201,168,76,0.4);
+  }
+  .btn-start:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.5); }
+
+  /* MAIN CONTENT AREA */
+  .content-wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 32px; }
+  .section-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 4vw, 32px); color: var(--ink); line-height: 1.3; }
+  .section-sub { color: var(--muted); margin-top: 10px; font-size: 15px; line-height: 1.65; }
+
+  /* PERSONA CARDS */
+  .persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .persona-card {
+    border: 2px solid var(--paper);
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .persona-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .persona-card.p-science::before { background: var(--blue); }
+  .persona-card.p-commerce::before { background: var(--teal); }
+  .persona-card.p-arts::before { background: var(--purple); }
+  .persona-card.p-undecided::before { background: var(--gold); }
+  .persona-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+  .persona-card.selected { border-color: var(--gold); background: #FFFBF0; box-shadow: 0 0 0 3px rgba(201,168,76,0.25); }
+  .persona-icon { font-size: 32px; margin-bottom: 12px; }
+  .persona-name { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+  .persona-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .persona-check { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; background: var(--gold); border-radius: 50%; display: none; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; }
+  .persona-card.selected .persona-check { display: flex; }
+
+  /* QUIZ */
+  .quiz-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 32px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .quiz-q-num { font-size: 12px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
+  .quiz-question { font-size: 18px; font-weight: 600; line-height: 1.5; margin-bottom: 24px; color: var(--ink); }
+  .quiz-options { display: grid; gap: 10px; }
+  .quiz-option {
+    border: 2px solid #E8E4DC;
+    border-radius: 6px; padding: 14px 18px;
+    cursor: pointer; font-size: 15px; font-weight: 500;
+    transition: all 0.2s; background: #fff;
+    text-align: left; display: flex; align-items: center; gap: 12px;
+  }
+  .quiz-option .opt-letter { width: 28px; height: 28px; background: var(--paper); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+  .quiz-option:hover { border-color: var(--gold); background: #FFFBF0; }
+  .quiz-option.selected { border-color: var(--gold); background: #FFFBF0; }
+  .quiz-option.selected .opt-letter { background: var(--gold); color: #fff; }
+  .quiz-option.correct { border-color: #2D7A4A; background: #F0FAF4; }
+  .quiz-option.correct .opt-letter { background: #2D7A4A; color: #fff; }
+  .quiz-option.wrong { border-color: var(--red); background: #FDF0F0; }
+
+  /* FRAMEWORK EXERCISE */
+  .framework-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .framework-grid { grid-template-columns: 1fr; } }
+
+  .framework-cell {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #E8E4DC;
+    padding: 20px;
+    min-height: 140px;
+  }
+  .framework-cell.highlight { border-color: var(--gold); background: #FFFBF0; }
+  .cell-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .cell-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+  .cell-input {
+    width: 100%; border: none; background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+    resize: none; outline: none; line-height: 1.6;
+    min-height: 70px;
+  }
+  .cell-input::placeholder { color: #BFB9AD; }
+
+  /* SCALE SLIDER */
+  .scale-item { margin-bottom: 20px; }
+  .scale-label { font-weight: 600; font-size: 15px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .scale-label span { font-size: 13px; color: var(--gold); font-weight: 700; }
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 6px; background: #E8E4DC; border-radius: 10px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--gold); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(201,168,76,0.4); }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ROI TABLE */
+  .roi-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+  .roi-table th { background: var(--accent); color: var(--gold); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; padding: 14px 18px; text-align: left; }
+  .roi-table td { padding: 14px 18px; border-bottom: 1px solid #F0EBE0; font-size: 14px; }
+  .roi-table tr:last-child td { border-bottom: none; }
+  .roi-table tr:hover td { background: #FFFBF0; }
+  .roi-table td:first-child { font-weight: 600; }
+  .roi-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+  .badge-high { background: #E8F5EC; color: #1B7A3B; }
+  .badge-mid { background: #FFF3E0; color: #B85A00; }
+  .badge-low { background: #FDEAEA; color: #B83030; }
+
+  /* TSHAPED */
+  .tshape-wrap { position: relative; }
+  .tshape-visual { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .tshape-top { background: var(--accent); color: #fff; border-radius: 8px 8px 0 0; padding: 16px 24px; text-align: center; width: 85%; }
+  .tshape-top-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .tshape-top-val { font-size: 15px; font-weight: 600; }
+  .tshape-stem { background: rgba(27,58,45,0.08); border: 2px dashed rgba(27,58,45,0.2); width: 180px; min-height: 80px; padding: 12px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 13px; color: var(--muted); }
+  .tshape-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .tshape-field label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 5px; }
+  .tshape-field input, .tshape-field textarea {
+    width: 100%; border: 1.5px solid #E8E4DC; border-radius: 6px; padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
+    outline: none; background: #fff; resize: none;
+    transition: border-color 0.2s;
+  }
+  .tshape-field input:focus, .tshape-field textarea:focus { border-color: var(--gold); }
+
+  /* RESULT CARD */
+  .result-card {
+    background: var(--accent);
+    border-radius: 12px; padding: 36px 32px;
+    color: #fff; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+  .result-card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; background: rgba(201,168,76,0.1);
+    border-radius: 50%;
+  }
+  .result-card::after {
+    content: ''; position: absolute; bottom: -60px; left: -20px;
+    width: 150px; height: 150px; background: rgba(201,168,76,0.06);
+    border-radius: 50%;
+  }
+  .result-persona { color: var(--gold); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; position: relative; z-index: 1; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 4vw, 32px); margin-bottom: 16px; line-height: 1.3; position: relative; z-index: 1; }
+  .result-insight { background: rgba(255,255,255,0.08); border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 0 6px 6px 0; font-size: 15px; line-height: 1.7; position: relative; z-index: 1; }
+
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+  .insight-item { background: #fff; border-radius: 8px; padding: 20px; border-left: 4px solid var(--gold); }
+  .insight-item-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .insight-item-val { font-size: 15px; font-weight: 700; color: var(--ink); }
+
+  /* NAV */
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; gap: 12px; }
+  .btn { padding: 13px 28px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; border: none; }
+  .btn-secondary { background: transparent; border: 2px solid #D4CFC6; color: var(--muted); }
+  .btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-primary { background: var(--gold); color: var(--ink); box-shadow: 0 4px 16px rgba(201,168,76,0.35); }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-primary:disabled { background: #E8E4DC; color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: linear-gradient(to right, transparent, #D4CFC6, transparent); margin: 32px 0; }
+
+  /* BOOK SOURCE TAG */
+  .source-tag { display: inline-flex; align-items: center; gap: 6px; background: #F0EBE0; border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 18px; }
+  .source-tag::before { content: '📖'; font-size: 12px; }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box { background: #FFFBF0; border: 1.5px solid #F0D080; border-radius: 8px; padding: 18px 20px; margin: 20px 0; }
+  .highlight-box p { font-size: 14px; color: var(--ink); line-height: 1.7; }
+  .highlight-box strong { color: var(--accent); }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0EBE0; font-size: 15px; cursor: pointer; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-box { width: 22px; height: 22px; border: 2px solid #D4CFC6; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all 0.2s; }
+  .checklist li.done .check-box { background: var(--gold); border-color: var(--gold); }
+  .checklist li.done .check-box::after { content: '✓'; color: #fff; font-size: 12px; font-weight: 700; }
+  .checklist li.done span { text-decoration: line-through; color: var(--muted); }
+
+  /* TAG CHIPS */
+  .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: #F0EBE0; border-radius: 20px; padding: 6px 14px; font-size: 13px; color: var(--muted); cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s; }
+  .tag:hover { border-color: var(--gold); color: var(--ink); }
+  .tag.active { background: var(--gold); color: var(--ink); font-weight: 600; border-color: var(--gold); }
+
+  /* SCORE METER */
+  .score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .score-name { font-size: 14px; font-weight: 600; width: 140px; flex-shrink: 0; }
+  .score-bar-wrap { flex: 1; height: 10px; background: #E8E4DC; border-radius: 10px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+  .score-val { width: 36px; text-align: right; font-size: 14px; font-weight: 700; color: var(--gold); }
+
+  /* FINAL */
+  .final-hero { text-align: center; padding: 48px 24px; }
+  .final-icon { font-size: 56px; margin-bottom: 20px; }
+  .final-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 5vw, 40px); margin-bottom: 16px; }
+  .final-sub { color: var(--muted); font-size: 16px; max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+  .navya-cta { background: var(--accent); color: #fff; border-radius: 10px; padding: 28px 32px; text-align: center; margin-top: 24px; }
+  .navya-cta .cta-label { color: var(--gold); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .navya-cta h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 8px; }
+  .navya-cta p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 16px; }
+  .navya-cta a { background: var(--gold); color: var(--ink); padding: 12px 28px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 15px; display: inline-block; }
+
+  /* ACTIVITY BADGE */
+  .activity-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--gold); padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="brand">FinnFluent <span>CAREER CLARITY WORKSHOP</span></div>
+  <div class="progress-bar-wrap">
+    <div class="progress-label">Your Progress</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="step-indicator" id="stepIndicator">—</div>
+</header>
+
+<!-- SCREEN 0: WELCOME -->
+<div class="screen active" id="screen-0">
+  <div class="hero">
+    <div class="hero-tag">Corporate Workshop · FinnFluent</div>
+    <h1 class="hero-title">Find Your Child's<br><em>Career ROI</em></h1>
+    <p class="hero-subtitle">A guided exercise system built on three frameworks. Answer honestly. Leave with clarity your child can act on.</p>
+    <div class="hero-books">
+      <div class="book-chip">📘 Stream Selection Guide</div>
+      <div class="book-chip">🗺️ Career Blueprint</div>
+      <div class="book-chip">⏳ 15-Year Career Map</div>
+    </div>
+    <button class="btn-start" onclick="goTo(1)">Start the Exercise →</button>
+  </div>
+</div>
+
+<!-- SCREEN 1: PERSONA SELECTION -->
+<div class="screen" id="screen-1">
+  <div class="content-wrap">
+    <div class="activity-badge">⚡ Activity 1 of 6</div>
+    <div class="section-header">
+      <div class="section-tag">📘 From: Stream Selection Guide</div>
+      <h2 class="section-title">Where is your child right now?</h2>
+      <p class="section-sub">Select the option that best describes your child's current situation. Every exercise ahead will adapt to your answer.</p>
+    </div>
+    <div class="persona-grid" id="personaGrid">
+      <div class="persona-card p-science" onclick="selectPersona(this, 'science')" data-persona="science">
+        <div class="persona-check">✓</div>
+        <div class="persona-icon">🔬</div>
+        <div class="persona-name">Science — PCM</div>
+        <div class="persona-desc">Physics, Chemistry, Maths. Engineering or tech pathway. Still figuring out which direction.</div>
+      </div>
+      <div class="persona-card p-science" onclick="selectPersona(this, 'bipc')" data-persona="bipc">
+        <div class="persona-check">✓</div>
+        <div class="persona-icon">🧬</div>
+        <div class="persona-name">Science — BIPC</div>
+        <div class="persona-desc">Biology, Chemistry. Medical or life sciences path. NEET pressure is real.</div>
+      </div>
+      <div class="persona-card p-commerce" onclick="selectPersona(this, 'commerce')" data-persona="commerce">
+        <div class="persona-check">✓</div>
+        <div class="persona-icon">📈</div>
+        <div class="persona-name">Commerce</div>
+        <div class="persona-desc">Business, Accounts, Economics. Unsure if CA, MBA or something newer is the right path.</div>
+      </div>
+      <div class="persona-card p-arts" onclick="selectPersona(this, 'arts')" data-persona="arts">
+        <div class="persona-check">✓</div>
+        <div class="persona-icon">🎨</div>
+        <div class="persona-name">Arts / Humanities</div>
+        <div class="persona-desc">Faced family doubt. But this was the honest choice. Now navigating what to do with it.</div>
+      </div>
+      <div class="persona-card p-undecided" onclick="selectPersona(this, 'undecided')" data-persona="undecided">
+        <div class="persona-check">✓</div>
+        <div class="persona-icon">🤔</div>
+        <div class="persona-name">Still Deciding</div>
+        <div class="persona-desc">Class 10. Stream selection is coming. The family is overwhelmed. No clarity yet.</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <div></div>
+      <button class="btn btn-primary" id="btn1" disabled onclick="goTo(2)">Next: Strength Map →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: STRENGTH MAPPING (Psychometry) -->
+<div class="screen" id="screen-2">
+  <div class="content-wrap">
+    <div class="activity-badge">⚡ Activity 2 of 6</div>
+    <div class="section-header">
+      <div class="section-tag">📘 From: Stream Selection Guide — Chapter 3</div>
+      <h2 class="section-title">Your Child's Strength Map</h2>
+      <p class="section-sub">Rate honestly — not based on marks, but based on where your child lights up. Drag each slider.</p>
+    </div>
+    <div class="quiz-box">
+      <div id="strengthSliders"></div>
+    </div>
+    <div class="highlight-box">
+      <p>📌 <strong>Why this matters:</strong> Most families choose streams based on marks, not strengths. A child can score 90% in Maths and still not be wired for engineering. Strength mapping reveals the difference.</p>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Next: Career ROI Framework →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: CAREER ROI FRAMEWORK -->
+<div class="screen" id="screen-3">
+  <div class="content-wrap">
+    <div class="activity-badge">⚡ Activity 3 of 6</div>
+    <div class="section-header">
+      <div class="section-tag">🗺️ From: Career Blueprint — The ROI Framework</div>
+      <h2 class="section-title">The Career ROI Framework</h2>
+      <p class="section-sub">Fill each box for your child. Don't overthink — write the first honest thing that comes to mind. There are no wrong answers.</p>
+    </div>
+    <div class="framework-grid">
+      <div class="framework-cell highlight">
+        <div class="cell-label">Interests</div>
+        <div class="cell-title">What does your child love doing?</div>
+        <textarea class="cell-input" placeholder="e.g. Coding, drawing, debating, helping others, fixing things..." id="roi-interests"></textarea>
+      </div>
+      <div class="framework-cell">
+        <div class="cell-label">Natural Strengths</div>
+        <div class="cell-title">What comes easily without effort?</div>
+        <textarea class="cell-input" placeholder="e.g. Explaining things, solving puzzles, organising, creating..." id="roi-strengths"></textarea>
+      </div>
+      <div class="framework-cell">
+        <div class="cell-label">Market Demand 2030</div>
+        <div class="cell-title">What will the world pay well for?</div>
+        <textarea class="cell-input" placeholder="e.g. AI, healthcare, sustainability, content, data..." id="roi-market"></textarea>
+      </div>
+      <div class="framework-cell highlight">
+        <div class="cell-label">ROI Sweet Spot</div>
+        <div class="cell-title">Where all three overlap</div>
+        <textarea class="cell-input" placeholder="When you fill the 3 boxes, write the career zone that sits in the middle..." id="roi-sweet"></textarea>
+      </div>
+    </div>
+    <div class="highlight-box" style="margin-top:20px">
+      <p>💡 <strong>Navya's Insight:</strong> Most parents focus only on what the market wants. But if there's no interest and no strength in it, your child will be average at best — and miserable at worst. The overlap is where your child becomes exceptional.</p>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Next: 15-Year Career Map →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4: 15-YEAR CAREER MAP -->
+<div class="screen" id="screen-4">
+  <div class="content-wrap">
+    <div class="activity-badge">⚡ Activity 4 of 6</div>
+    <div class="section-header">
+      <div class="section-tag">⏳ From: 15-Year Career Map</div>
+      <h2 class="section-title">Where does your child's path lead?</h2>
+      <p class="section-sub">Select the careers most relevant to your child's stream and interests. These are the professions still growing strongly in 2035–2040.</p>
+    </div>
+    <div id="careerTagsWrap">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Select up to 3 that feel right:</p>
+      <div class="tag-wrap" id="careerTags"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="quiz-box">
+      <div class="quiz-q-num">Reverse Engineering Question</div>
+      <div class="quiz-question" id="reverseQ">If your child's target career is the destination, what stream and subject choices are the vehicle?</div>
+      <div style="margin-top:16px">
+        <div class="tshape-inputs">
+          <div class="tshape-field">
+            <label>Target Career</label>
+            <input type="text" id="targetCareer" placeholder="e.g. AI Engineer, Doctor, Designer">
+          </div>
+          <div class="tshape-field">
+            <label>Required Stream</label>
+            <input type="text" id="reqStream" placeholder="e.g. PCM → CS Engineering">
+          </div>
+          <div class="tshape-field" style="grid-column: 1/-1;">
+            <label>Key Skills to Build by Class 12</label>
+            <textarea rows="2" id="keySkills" placeholder="e.g. Python basics, communication, design thinking, NEET prep, leadership..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(5)">Next: T-Shaped Child Model →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5: T-SHAPED MODEL + MISTAKE CHECKLIST -->
+<div class="screen" id="screen-5">
+  <div class="content-wrap">
+    <div class="activity-badge">⚡ Activity 5 of 6</div>
+    <div class="section-header">
+      <div class="section-tag">🗺️ From: Career Blueprint — T-Shape Model</div>
+      <h2 class="section-title">Build a T-Shaped Child</h2>
+      <p class="section-sub">One deep skill. Many supporting skills. This is the model for career-proof children in 2030–2040.</p>
+    </div>
+    <div class="quiz-box">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+        <div class="tshape-top">
+          <div class="tshape-top-label">Deep Core Skill (The "depth")</div>
+          <input type="text" id="tDeep" placeholder="e.g. Data Analysis, Surgery, Graphic Design, Law..." style="background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,0.5);color:#fff;font-size:15px;font-weight:600;text-align:center;outline:none;width:100%;padding:6px 0;font-family:'DM Sans',sans-serif;">
+        </div>
+        <div class="tshape-stem" style="width:3px;height:40px;background:rgba(201,168,76,0.4);flex-shrink:0;"></div>
+        <div style="width:85%;background:rgba(27,58,45,0.05);border:2px dashed rgba(27,58,45,0.2);border-radius:8px;padding:14px 20px;text-align:center;font-size:13px;color:var(--muted);">
+          Supporting breadth skills (communication, digital tools, leadership, data literacy, emotional intelligence)
+        </div>
+      </div>
+      <div class="tshape-inputs" style="margin-top:20px;">
+        <div class="tshape-field">
+          <label>3 Breadth Skills to Develop</label>
+          <textarea rows="3" id="tBreadth" placeholder="e.g. Public speaking, Excel, AI tools, Project management..."></textarea>
+        </div>
+        <div class="tshape-field">
+          <label>Why This Combination Wins</label>
+          <textarea rows="3" id="tWhy" placeholder="e.g. A doctor who can present data clearly and use AI diagnostics will be 10x more valuable than one who can't..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-header">
+      <h2 class="section-title" style="font-size:22px;">Common Family Mistakes — Check Your Blind Spots</h2>
+      <p class="section-sub">Tap each mistake you recognise from your own experience. Awareness is the first step.</p>
+    </div>
+    <ul class="checklist" id="mistakeList">
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Choosing stream based on neighbour/cousin's success, not child's own profile</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Confusing high marks in a subject with genuine aptitude or interest in it</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Assuming Science → Engineering → Job Security (this is a 1990s map)</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Not discussing career options with the child — deciding for them without them</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Waiting until Class 12 results to think about career direction</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Underestimating Arts and Commerce as valid high-ROI career paths</span></li>
+      <li onclick="toggleCheck(this)"><div class="check-box"></div><span>Ignoring emerging careers — only considering professions that already exist today</span></li>
+    </ul>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(4)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(6)">See My Clarity Summary →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 6: RESULT SUMMARY -->
+<div class="screen" id="screen-6">
+  <div class="content-wrap">
+    <div class="activity-badge">✅ Activity 6 of 6 — Your Summary</div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-persona" id="resultPersonaLabel"></div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <div class="result-insight" id="resultInsight"></div>
+    </div>
+
+    <div class="insight-grid" id="insightGrid"></div>
+
+    <div class="divider"></div>
+
+    <!-- Score bars -->
+    <div class="section-header">
+      <div class="section-tag">Strength Profile</div>
+      <h3 class="section-title" style="font-size:20px;">Your Child's Top Dimensions</h3>
+    </div>
+    <div id="scoreBars"></div>
+
+    <div class="divider"></div>
+
+    <!-- Checklist count -->
+    <div class="highlight-box" id="mistakeSummary"></div>
+
+    <div class="divider"></div>
+
+    <div class="navya-cta">
+      <div class="cta-label">Whenever You Are Ready</div>
+      <h3>Book a Personal Clarity Session with Navya</h3>
+      <p>One session. Your child's exact profile. A clear path forward — not generic advice.<br>MBA · CCA · NCTE Mentor · 4 Books · 6 Years Experience</p><div style="font-size:13px;margin-top:4px;color:rgba(255,255,255,0.5);">Instagram: @careerwithnavya</div>
+      <a href="https://finnfluent.edumilestones.com" target="_blank">Book at finnfluent.edumilestones.com →</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- RESOURCES SECTION -->
+    <div class="section-header">
+      <div class="section-tag">Your Workshop Resources</div>
+      <h3 class="section-title" style="font-size:20px;">Download All 3 Books — Free</h3>
+      <p class="section-sub" style="font-size:14px;">Tap any book to open it directly. Take your time reading — the exercises in this tool are built on these three frameworks.</p>
+    </div>
+
+    <div style="display:grid;gap:12px;margin-bottom:20px;">
+
+      <a href="https://drive.google.com/file/d/1837VI_PfK2F0eNtodIqTHNnIa3-Qcxvw/view?usp=drivesdk" target="_blank" style="text-decoration:none;">
+        <div style="background:#fff;border:2px solid #E8E4DC;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='#C9A84C';this.style.background='#FFFBF0'" onmouseout="this.style.borderColor='#E8E4DC';this.style.background='#fff'">
+          <div style="width:48px;height:48px;background:#1B3A2D;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;">📘</div>
+          <div style="flex:1;">
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-weight:700;margin-bottom:3px;">BOOK 1</div>
+            <div style="font-weight:700;font-size:15px;color:#0D0D0D;margin-bottom:2px;">Stream Selection Guide</div>
+            <div style="font-size:13px;color:#7A7060;">Chapter-wise guide to choosing the right stream — with the 5-question self-discovery framework</div>
+          </div>
+          <div style="color:#C9A84C;font-size:20px;flex-shrink:0;">↗</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/1viOVbr9wIaS306AbXbqD4w9rTqvCQsG-/view?usp=drivesdk" target="_blank" style="text-decoration:none;">
+        <div style="background:#fff;border:2px solid #E8E4DC;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='#C9A84C';this.style.background='#FFFBF0'" onmouseout="this.style.borderColor='#E8E4DC';this.style.background='#fff'">
+          <div style="width:48px;height:48px;background:#1B3A2D;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;">🗺️</div>
+          <div style="flex:1;">
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-weight:700;margin-bottom:3px;">BOOK 2</div>
+            <div style="font-weight:700;font-size:15px;color:#0D0D0D;margin-bottom:2px;">Career Blueprint</div>
+            <div style="font-size:13px;color:#7A7060;">The Career ROI Framework + T-Shape Model — the two tools you used in this session</div>
+          </div>
+          <div style="color:#C9A84C;font-size:20px;flex-shrink:0;">↗</div>
+        </div>
+      </a>
+
+      <a href="https://drive.google.com/file/d/16fTX5I9B8YuP9YODFdkoNiF_34Dh8Jwe/view?usp=drivesdk" target="_blank" style="text-decoration:none;">
+        <div style="background:#fff;border:2px solid #E8E4DC;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='#C9A84C';this.style.background='#FFFBF0'" onmouseout="this.style.borderColor='#E8E4DC';this.style.background='#fff'">
+          <div style="width:48px;height:48px;background:#1B3A2D;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;">⏳</div>
+          <div style="flex:1;">
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;font-weight:700;margin-bottom:3px;">BOOK 3</div>
+            <div style="font-weight:700;font-size:15px;color:#0D0D0D;margin-bottom:2px;">15-Year Career Map</div>
+            <div style="font-size:13px;color:#7A7060;">Reverse engineer the path from 2025 to 2040 — rising careers, declining professions, year-by-year plan</div>
+          </div>
+          <div style="color:#C9A84C;font-size:20px;flex-shrink:0;">↗</div>
+        </div>
+      </a>
+
+    </div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Start Over</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentScreen = 0;
+let selectedPersona = null;
+const totalScreens = 7;
+
+const personaData = {
+  science: {
+    label: 'PCM — Science Stream',
+    title: 'Your child chose the competitive path. Now the real decisions begin.',
+    insight: 'PCM is just the ticket. The next 3 decisions — which engineering branch, which college level, and which skills to build now — will actually determine the career. Most PCM families miss this gap entirely.',
+    careers: ['AI / Machine Learning Engineer','Data Scientist','Robotics Engineer','Aerospace Engineer','Quantum Computing Researcher','Software Product Manager','Cybersecurity Analyst','Electronics Design Engineer'],
+    color: '#2D4A7A'
+  },
+  bipc: {
+    label: 'BIPC — Science Stream',
+    title: 'NEET is one door. But your child has many more to open.',
+    insight: 'BIPC is not just a NEET preparation. Biotech, pharmaceutical research, genetic counselling, healthcare AI, and clinical psychology are fast-growing fields that most BIPC families never consider. Diversify the vision.',
+    careers: ['Medical Doctor (MBBS)','Biotech Researcher','Pharmacist','Clinical Psychologist','Genetic Counsellor','Healthcare Data Analyst','Physiotherapist','Nutritionist & Dietician'],
+    color: '#1A5F5A'
+  },
+  commerce: {
+    label: 'Commerce Stream',
+    title: 'Commerce in 2030 looks nothing like Commerce in 2010.',
+    insight: 'The old path was BCom → CA or MBA. The new path includes fintech product management, ESG investing, business analytics, and digital marketing strategy. CA and MBA are still strong — but they are not the only routes worth mapping.',
+    careers: ['Chartered Accountant','Financial Analyst','Fintech Product Manager','Business Data Analyst','Digital Marketing Strategist','Investment Banker','ESG Consultant','Entrepreneur'],
+    color: '#5A3D7A'
+  },
+  arts: {
+    label: 'Arts / Humanities Stream',
+    title: 'Arts was the brave choice. Now let\'s make it the smart one too.',
+    insight: 'The world\'s fastest-growing companies are hiring psychologists, writers, UX researchers, policy analysts, and historians. Your child\'s stream was never the problem — it was the roadmap that was missing. Now you have one.',
+    careers: ['UX Researcher & Designer','Content Strategist','Policy Analyst','Psychologist / Counsellor','Journalist & Media Producer','Social Impact Manager','Law (Corporate or Advocacy)','Human Resource Strategist'],
+    color: '#5A3D7A'
+  },
+  undecided: {
+    label: 'Stream Selection — In Progress',
+    title: 'The decision is not made yet. That\'s actually your advantage.',
+    insight: 'Families who decide the stream based on the child\'s ROI framework — interest + strength + market — consistently outperform those who choose by marks or pressure. You are in the right room at the right time.',
+    careers: ['Map after stream selection','Start with the ROI exercise first','Use the 15-year career map as a reverse guide','Book a stream clarity session'],
+    color: '#C9A84C'
+  }
+};
+
+const strengths = [
+  { label: 'Logical / Analytical Thinking', low: 'Prefers intuition', high: 'Loves structured problem solving' },
+  { label: 'Creativity & Expression', low: 'Prefers conventional paths', high: 'Thrives with open-ended problems' },
+  { label: 'People & Communication', low: 'Prefers solo work', high: 'Energised by collaboration' },
+  { label: 'Hands-on / Technical', low: 'Prefers ideas & strategy', high: 'Loves building & making' },
+  { label: 'Research & Deep Learning', low: 'Prefers action over study', high: 'Could spend hours reading deep' },
+  { label: 'Leadership & Organising', low: 'Prefers following & executing', high: 'Naturally takes charge' }
+];
+
+function buildStrengthSliders() {
+  const wrap = document.getElementById('strengthSliders');
+  wrap.innerHTML = strengths.map((s, i) => `
+    <div class="scale-item">
+      <div class="scale-label">${s.label} <span id="sv-${i}">5</span></div>
+      <input type="range" min="1" max="10" value="5" id="sl-${i}" oninput="updateSlider(${i})">
+      <div class="scale-ends"><span>${s.low}</span><span>${s.high}</span></div>
+    </div>
+  `).join('');
+}
+
+function updateSlider(i) {
+  const val = document.getElementById('sl-' + i).value;
+  document.getElementById('sv-' + i).textContent = val;
+}
+
+function buildCareerTags() {
+  const wrap = document.getElementById('careerTags');
+  if (!selectedPersona) return;
+  const pd = personaData[selectedPersona];
+  wrap.innerHTML = pd.careers.map(c => `<div class="tag" onclick="toggleTag(this)">${c}</div>`).join('');
+}
+
+function toggleTag(el) {
+  const active = document.querySelectorAll('.tag.active');
+  if (el.classList.contains('active')) {
+    el.classList.remove('active');
+  } else if (active.length < 3) {
+    el.classList.add('active');
+  }
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+}
+
+function selectPersona(el, persona) {
+  document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPersona = persona;
+  document.getElementById('btn1').disabled = false;
+}
+
+function buildScoreBars() {
+  const wrap = document.getElementById('scoreBars');
+  const scores = strengths.map((s, i) => ({ label: s.label, val: parseInt(document.getElementById('sl-' + i)?.value || 5) }));
+  scores.sort((a, b) => b.val - a.val);
+  const colors = ['#C9A84C', '#1B3A2D', '#2D4A7A', '#5A3D7A', '#1A5F5A', '#B84040'];
+  wrap.innerHTML = scores.map((s, i) => `
+    <div class="score-row">
+      <div class="score-name">${s.label.split(' & ')[0]}</div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${s.val*10}%;background:${colors[i]}"></div></div>
+      <div class="score-val">${s.val}/10</div>
+    </div>
+  `).join('');
+}
+
+function buildResultCard() {
+  if (!selectedPersona) return;
+  const pd = personaData[selectedPersona];
+  document.getElementById('resultPersonaLabel').textContent = pd.label;
+  document.getElementById('resultTitle').textContent = pd.title;
+  document.getElementById('resultInsight').textContent = pd.insight;
+
+  const interests = document.getElementById('roi-interests')?.value || '—';
+  const sweet = document.getElementById('roi-sweet')?.value || '—';
+  const target = document.getElementById('targetCareer')?.value || '—';
+  const deepSkill = document.getElementById('tDeep')?.value || '—';
+
+  document.getElementById('insightGrid').innerHTML = `
+    <div class="insight-item"><div class="insight-item-label">Interest Zone</div><div class="insight-item-val">${interests.substring(0,60) || '—'}</div></div>
+    <div class="insight-item"><div class="insight-item-label">ROI Sweet Spot</div><div class="insight-item-val">${sweet.substring(0,60) || '—'}</div></div>
+    <div class="insight-item"><div class="insight-item-label">Target Career</div><div class="insight-item-val">${target || '—'}</div></div>
+    <div class="insight-item"><div class="insight-item-label">Core Depth Skill</div><div class="insight-item-val">${deepSkill || '—'}</div></div>
+  `;
+
+  buildScoreBars();
+
+  const done = document.querySelectorAll('#mistakeList li.done').length;
+  const total = document.querySelectorAll('#mistakeList li').length;
+  document.getElementById('mistakeSummary').innerHTML = `<p>You identified <strong>${done} of ${total} common decision mistakes</strong> as relevant to your situation. ${done >= 3 ? 'This level of self-awareness is exactly what leads to better outcomes.' : 'Review the full list again — families who catch these early save years of rerouting.'}</p>`;
+}
+
+function goTo(n) {
+  if (n === 4) buildCareerTags();
+  if (n === 6) buildResultCard();
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  currentScreen = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const fill = Math.round((n / 6) * 100);
+  document.getElementById('progressFill').style.width = fill + '%';
+  document.getElementById('stepIndicator').textContent = n === 0 ? '—' : `Step ${n} of 6`;
+}
+
+// Init
+buildStrengthSliders();
+</script>
+</body>
+</html>
